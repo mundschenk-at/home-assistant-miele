@@ -631,13 +631,16 @@ class MieleConsumptionSensor(MieleSensorEntity):
             self._cached_consumption = -1
             return 0
 
-        if self._cached_consumption >= 0:
-            if (
-                "ecoFeedback" not in device_state
-                or device_state["ecoFeedback"] is None
-                or device_status_value == STATUS_NOT_CONNECTED
-            ):
+        # We can't evaluate the ecoFeedback state at the moment.
+        if (
+            "ecoFeedback" not in device_state
+            or device_state["ecoFeedback"] is None
+            or device_status_value == STATUS_NOT_CONNECTED
+        ):
+            if self._cached_consumption > 0:
                 return self._cached_consumption
+            else:
+                return 0
 
         consumption = 0
         if self._key == "energyConsumption":

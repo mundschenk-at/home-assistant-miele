@@ -316,6 +316,38 @@ class MieleDevice(Entity):
 
         return result
 
+    # Information about the devices that is partially visible in the UI.
+    # The most critical thing here is to give this entity a name so it is displayed
+    # as a "device" in the HA UI. This name is used on the Devices overview table,
+    # and the initial screen when the device is added (rather than the entity name
+    # property below). You can then associate other Entities (eg: a battery
+    # sensor) with this device, so it shows more like a unified element in the UI.
+    # For example, an associated battery sensor will be displayed in the right most
+    # column in the Configuration > Devices view for a device.
+    # To associate an entity with this device, the device_info must also return an
+    # identical "identifiers" attribute, but not return a name attribute.
+    # See the sensors.py file for the corresponding example setup.
+    # Additional meta data can also be returned here, including sw_version (displayed
+    # as Firmware), model and manufacturer (displayed as <model> by <manufacturer>)
+    # shown on the device info screen. The Manufacturer and model also have their
+    # respective columns on the Devices overview table. Note: Many of these must be
+    # set when the device is first added, and they are not always automatically
+    # refreshed by HA from it's internal cache.
+    # For more information see:
+    # https://developers.home-assistant.io/docs/device_registry_index/#device-properties
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Information about this entity/device."""
+        return {
+            "identifiers": {(DOMAIN, self._home_device["ident"]["deviceIdentLabel"]["fabNumber"])},
+            # If desired, the name for the device could be different to the entity
+            "name": self.name,
+            "default_manufacturer": "Miele",
+            "model": self._home_device["ident"]["deviceIdentLabel"]["techType"],
+            "hw_version" : self._home_device["ident"]["xkmIdentLabel"]["techType"],
+            "sw_version": self._home_device["ident"]["xkmIdentLabel"]["releaseVersion"]
+        }
+
     @property
     def extra_state_attributes(self):
         """Attributes."""
