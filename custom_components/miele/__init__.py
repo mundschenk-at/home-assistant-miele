@@ -14,7 +14,7 @@ from homeassistant.components.http import HomeAssistantView
 from homeassistant.core import callback
 from homeassistant.helpers import network
 from homeassistant.helpers.discovery import load_platform
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity, DeviceInfo
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.network import get_url
